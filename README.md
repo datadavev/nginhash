@@ -9,9 +9,13 @@ Three main endpoints are provided:
 
 ## Setup
 
+Checkout then:
+
+```bash
+docker compose up
 ```
-docker compose up -d
-```
+
+## Operation
 
 Three pids are included for some initial testing:
 
