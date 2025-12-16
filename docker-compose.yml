@@ -1,0 +1,11 @@
+name: nginhash
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginhash
+    ports: 
+      - "2010:80"
+    volumes:
+      - ./data:/usr/share/nginx/html:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
