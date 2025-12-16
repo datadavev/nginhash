@@ -110,11 +110,50 @@ C1C,70.50356,-149.64598,-27.3,78%,14.4,17%,324
 C
 ```
 
+Read the parquet using duckdb:
+
+```
+$ duckdb -c "select count(*) from read_parquet('http://localhost:2010/object/index.parquet');"
+┌──────────────┐
+│ count_star() │
+│    int64     │
+├──────────────┤
+│    18081     │
+└──────────────┘
+```
+
+```
+$ time duckdb -c "select * from read_parquet('http://localhost:2010/object/index.parquet') offset 10000 limit 10;"
+┌─────────┬────────────┬────────────┬─────────┬─────────────┬─────────┬───┬───────────┬──────────────────────┬───────────┬────────────┬────────────┐
+│   pid   │  tcreated  │ tmodified  │    s    │      p      │    o    │ … │ authority │        stype         │   ssize   │   stime    │ properties │
+│ varchar │   int32    │   int32    │ varchar │   varchar   │ varchar │   │  varchar  │       varchar        │   float   │   int32    │    json    │
+├─────────┼────────────┼────────────┼─────────┼─────────────┼─────────┼───┼───────────┼──────────────────────┼───────────┼────────────┼────────────┤
+│ 10000   │ 1765497873 │ 1765497874 │ 10000   │ containedBy │ 9911    │ … │ NULL      │ text/plain           │    1691.0 │ 1761937768 │ NULL       │
+│ 10001   │ 1765497873 │ 1765497874 │ 10001   │ containedBy │ 9911    │ … │ NULL      │ text/x-python        │    6491.0 │ 1761937768 │ NULL       │
+│ 10002   │ 1765497873 │ 1765497874 │ 10002   │ containedBy │ 9911    │ … │ NULL      │ text/x-python        │   29621.0 │ 1761937768 │ NULL       │
+│ 10003   │ 1765497873 │ 1765497874 │ 10003   │ containedBy │ 9911    │ … │ NULL      │ application/octet-…  │ 1252560.0 │ 1761937768 │ NULL       │
+│ 10004   │ 1765497873 │ 1765497874 │ 10004   │ containedBy │ 9911    │ … │ NULL      │ text/x-python        │   64529.0 │ 1761937768 │ NULL       │
+│ 10005   │ 1765497873 │ 1765497874 │ 10005   │ containedBy │ 9911    │ … │ NULL      │ text/x-python        │     160.0 │ 1761937768 │ NULL       │
+│ 10006   │ 1765497873 │ 1765497874 │ 10006   │ containedBy │ 9911    │ … │ NULL      │ DIR                  │      NULL │       NULL │ NULL       │
+│ 10007   │ 1765497873 │ 1765497874 │ 10007   │ containedBy │ 9911    │ … │ NULL      │ text/x-python        │   17560.0 │ 1761937768 │ NULL       │
+│ 10008   │ 1765497873 │ 1765497874 │ 10008   │ containedBy │ 9912    │ … │ NULL      │ text/x-python        │    4684.0 │ 1761937768 │ NULL       │
+│ 10009   │ 1765497873 │ 1765497874 │ 10009   │ containedBy │ 9912    │ … │ NULL      │ text/x-python        │    4740.0 │ 1761937768 │ NULL       │
+├─────────┴────────────┴────────────┴─────────┴─────────────┴─────────┴───┴───────────┴──────────────────────┴───────────┴────────────┴────────────┤
+│ 10 rows                                                                                                                    12 columns (11 shown) │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+duckdb -c   0.06s user 0.03s system 91% cpu 0.101 total
+```
+
 ## Performance
 
 Performance seems reasonable with this small set of test data. Note that the tests were not exercising calling the DataONE `isAuthorized` API.
 
-<img width="1123" height="1026" alt="image" src="https://github.com/user-attachments/assets/5e7904c7-ee21-4c2d-9bcf-805bb755bd34" />
+Run with the following, then navigate to http://localhost:8089/ and set Users to 1000, incrementing 20 per second:
 
+```bash
+locust -f locustfile.py
+```
+
+<img width="1123" height="1026" alt="image" src="https://github.com/user-attachments/assets/5e7904c7-ee21-4c2d-9bcf-805bb755bd34" />
 
 
