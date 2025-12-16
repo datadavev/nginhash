@@ -92,6 +92,7 @@ async function test_sysmeta(r) {
  * @returns boolean
  */
 function isPublic(sysmeta_xml) {
+    // https://nginx.org/en/docs/njs/reference.html#xml
     if (sysmeta_xml === null) {
         // public by default
         return true;
@@ -131,7 +132,7 @@ async function isAuthorized(r, pid) {
         "authorized": null,
         "status": null,
         "message": null,
-        "url": null
+        "auth_url": null
     }
     const sysmeta_xml = await getSystemMetadata(pid);
     if (isPublic(sysmeta_xml)) {
@@ -145,14 +146,17 @@ async function isAuthorized(r, pid) {
     const url = `${service_url}/${encodeURIComponent(pid)}?action=read`
     info.url = url;
     try {
-        const opts = {
+        // https://nginx.org/en/docs/njs/reference.html#ngx_fetch
+        const options = {
             method: 'GET',
-            headers: {}
+            headers: {},
+            // WARNING: Set true on a real server
+            verify: false
         };
         if (token && token.length > 0) {
             options.headers["Authorization"] = token;
         }
-        const response = await ngx.fetch(url, opts);
+        const response = await ngx.fetch(url, options);
         info.status = response.status;
         if (response.status === 200) {
             info.authorized = true;
@@ -177,6 +181,7 @@ async function getMetadata(r) {
     const meta_data = await getSystemMetadata(pid);
     if (meta_data === null) {
         r.return(404, `System metadata not found for ${pid}`);
+        return;
     }
     r.headersOut["Content-Disposition"] = `inline; filename="${pid}_meta.xml"`;
     r.headersOut["Content-Type"] = "application/xml";
@@ -209,6 +214,7 @@ async function getInfo(r) {
         r.headersOut["Content-Disposition"] = 'inline; filename="info.json"';
         r.headersOut["Content-Type"] = "application/json";
         r.return(404, JSON.stringify(response, null, 2));
+        return;
     }
     response.meta_path = `${hashstore_root}/metadata/${response.pid_hash.join("/")}/${response.pid_hash[response.pid_hash.length-1]}`;
     const cid_parts = splitHash(response.pid_data.trim());
@@ -220,6 +226,7 @@ async function getInfo(r) {
         r.headersOut["Content-Disposition"] = 'inline; filename="info.json"';
         r.headersOut["Content-Type"] = "application/json";
         r.return(404, JSON.stringify(response, null, 2));
+        return;
     }
     response.cid_object_path = `/hashstore/objects/${cid_parts.join("/")}`;
     response.authorized = await isAuthorized(r, response.pid);
