@@ -45,7 +45,7 @@ docker compose up
 
 Three pids are included for some initial testing:
 
-- `urn:uuid:fc6798d4-9e79-4eb7-84d6-db05005cd356` a csv file file system metadata available
+- `urn:uuid:fc6798d4-9e79-4eb7-84d6-db05005cd356` a csv file with system metadata available
 - `BLE_LTER_leachate_DOM_composition.csv` a csv file with no system metadata
 - `index.parquet` a parquet file for testing byte range requests, no system metadata.
 
