@@ -7,6 +7,32 @@ Three main endpoints are provided:
 - `/meta/<pid>`: Retrieve system metadata for `pid`, including a check for public read permission.
 - `/object/<pid>`: Get the object identified by `pid`.
 
+```mermaid
+sequenceDiagram
+participant client
+participant nginx
+participant njs
+participant hashstore
+participant CN
+client ->> nginx: object/foo
+nginx ->> njs: getObject(foo)
+njs ->> njs: compute_paths
+njs ->> hashstore: getMetadata
+njs ->> njs: is public read?
+opt is not Public
+njs ->> CN: isAuthorized(bearer)
+CN ->> njs: 200 or 401
+end
+alt not authorized
+njs ->> nginx: 401
+nginx ->> client: 401
+else OK
+njs ->> nginx: path to foo
+nginx ->> client: bytes of foo
+end
+```
+Rough sketch of process for reading an object from hashstore.
+
 ## Setup
 
 Checkout then:
