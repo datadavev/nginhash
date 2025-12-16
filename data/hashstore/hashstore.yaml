@@ -1,0 +1,45 @@
+
+# Default configuration variables for HashStore
+
+############### HashStore Config Notes ###############
+############### Directory Structure ###############
+# store_depth
+# - Desired amount of directories when sharding an object to form the permanent address
+# - **WARNING**: DO NOT CHANGE UNLESS SETTING UP NEW HASHSTORE
+#
+# store_width
+# - Width of directories created when sharding an object to form the permanent address
+# - **WARNING**: DO NOT CHANGE UNLESS SETTING UP NEW HASHSTORE
+#
+# Example:
+# Below, objects are shown listed in directories that are 3 levels deep (DIR_DEPTH=3),
+# with each directory consisting of 2 characters (DIR_WIDTH=2).
+#    /var/filehashstore/objects
+#    ├── 7f
+#    │   └── 5c
+#    │       └── c1
+#    │           └── 8f0b04e812a3b4c8f686ce34e6fec558804bf61e54b176742a7f6368d6
+
+############### Format of the Metadata ###############
+# store_metadata_namespace
+# - The default metadata format (ex. system metadata)
+
+############### Hash Algorithms ###############
+# store_algorithm
+# - Hash algorithm to use when calculating object's hex digest for the permanent address
+#
+# store_default_algo_list
+# - Algorithm values supported by python hashlib 3.9.0+ for File Hash Store (FHS)
+# - The default algorithm list includes the hash algorithms calculated when storing an
+# - object to disk and returned to the caller after successful storage.
+
+store_depth: 3
+store_width: 2
+store_metadata_namespace: https://ns.dataone.org/service/types/v2.0#SystemMetadata
+store_algorithm: SHA-256
+store_default_algo_list:
+- MD5
+- SHA-1
+- SHA-256
+- SHA-384
+- SHA-512

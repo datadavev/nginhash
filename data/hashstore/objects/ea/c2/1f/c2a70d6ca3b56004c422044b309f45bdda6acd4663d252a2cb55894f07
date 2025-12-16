@@ -1,0 +1,13 @@
+"leachateID","geomorphicTerrainUnit","latitude","longitude","horizon","depth_cm","spectralSlope275_295_nm-1","spectralSlopeRatio","SUVA254_L_mg-DOC-1_m-1","number_formulae","mass","NOSC","AImod","sugar_like_percentRA","peptide_like_percentRA","aliphatics_percentRA","highlyUnsaturatedAndPhenolics_percentRA","polyphenolics_percentRA","condensedAromatics_percentRA","CHO_percentRA","CHON_percentRA","CHONS_percentRA","CHOS_percentRA"
+"PM-AL1","primary_surface",70.88635,-153.69984,"Active Layer",25,0.014,0.89,2.7,12903,542.6,0.02,0.32,0,0.3,2.7,84,11,1.9,65.3,27.9,0.5,6.2
+"PM-AL2","primary_surface",70.88635,-153.69984,"Active Layer",30,0.014,0.77,1.1,11457,530.9,0.1,0.33,0,0.2,1.9,83.1,12.4,2.4,65.9,28.8,0.5,4.8
+"PM-AL3","primary_surface",70.88635,-153.69985,"Active Layer",33,0.014,0.88,1.3,9706,542.1,0.1,0.34,0,0,1.8,80.3,14.5,3.4,68,26.2,0.1,5.7
+"DB-AL1","young_dtlb",70.87995,-153.89758,"Active Layer",25,0.016,0.82,1.3,14974,527.6,-0.02,0.3,0.1,0.6,7,78.2,11.9,2.1,69.3,20.8,1,8.8
+"DB-AL2","young_dtlb",70.87991,-153.89774,"Active Layer",30,0.015,0.77,1.3,12177,503.4,-0.07,0.28,0,1,8.1,81.1,8.7,1.1,67.8,19.8,1.2,11.1
+"DB-AL3","young_dtlb",70.87991,-153.89774,"Active Layer",30,0.015,0.79,1.4,12317,542.3,-0.02,0.32,0.1,1,4.9,79.8,12.7,1.7,68.5,23.2,0.7,7.6
+"DB-OP1","young_dtlb",70.87989,-153.89851,"Terrestrial Permafrost",56,0.014,0.73,2.2,12485,508,-0.03,0.3,0.1,2.6,9.1,73.6,12.1,2.6,62.8,23.8,1.3,12.2
+"DB-OP2","young_dtlb",70.87991,-153.89774,"Terrestrial Permafrost",65,0.017,0.85,1.2,11979,528,-0.08,0.26,0.4,6.1,14.2,68.5,9.1,1.7,63.2,25.6,0.9,10.3
+"DB-OP3","young_dtlb",70.87995,-153.89758,"Terrestrial Permafrost",65,0.014,0.71,1.6,14162,510.5,-0.03,0.29,0.4,3.8,12.1,68,12.8,2.8,62.5,24,1.2,12.3
+"DB-MU1","young_dtlb",70.87991,-153.89774,"Marine Permaforst",240,0.02,0.98,1.1,11502,516.6,-0.08,0.27,0,2.8,7.4,79.7,8.6,1.5,61.4,29.4,1,8.1
+"DB-MU2","young_dtlb",70.87991,-153.89774,"Marine Permaforst",260,0.015,1.26,0.9,10919,487.7,-0.12,0.23,0.6,6,14,71.4,6.6,1.3,59.6,26.2,2.1,12.1
+"DB-MU3","young_dtlb",70.87989,-153.89851,"Marine Permaforst",280,0.011,1.39,2,14572,498.2,-0.1,0.26,0.3,3.7,13.3,69.5,10.4,2.7,57.9,25.3,2.9,13.9

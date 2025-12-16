@@ -1,0 +1,18 @@
+2025-12-15 11:11:10 - INFO - HashStoreClient - use_multiprocessing (bool): False
+2025-12-15 11:11:10 - INFO - HashStoreClient - HashStore initialized.
+2025-12-15 11:11:10 - INFO - Successfully updated cid: eac21fc2a70d6ca3b56004c422044b309f45bdda6acd4663d252a2cb55894f07 with pid: BLE_LTER_leachate_DOM_composition.csv
+2025-12-15 11:11:10 - INFO - Successfully stored object for pid: BLE_LTER_leachate_DOM_composition.csv
+2025-12-15 13:53:44 - INFO - HashStoreClient - use_multiprocessing (bool): False
+2025-12-15 13:53:44 - INFO - HashStoreClient - HashStore initialized.
+2025-12-15 13:53:44 - INFO - Successfully updated cid: 4cd5a0e68498c4a3dab90729f70a30c68fac1a7f49f17176fff01217949fa05c with pid: index.parquet
+2025-12-15 13:53:44 - INFO - Successfully stored object for pid: index.parquet
+2025-12-15 20:57:33 - INFO - HashStoreClient - use_multiprocessing (bool): False
+2025-12-15 20:57:33 - INFO - HashStoreClient - HashStore initialized.
+2025-12-15 20:57:33 - INFO - Successfully updated cid: e68552235dc50dd525f70c52e86d012c2ffbc548845360271e49abbe15a45389 with pid: urn:uuid:fc6798d4-9e79-4eb7-84d6-db05005cd356
+2025-12-15 20:57:33 - INFO - Successfully stored object for pid: urn:uuid:fc6798d4-9e79-4eb7-84d6-db05005cd356
+2025-12-15 20:59:23 - INFO - HashStoreClient - use_multiprocessing (bool): False
+2025-12-15 20:59:23 - INFO - HashStoreClient - HashStore initialized.
+2025-12-15 20:59:23 - INFO - Successfully stored metadata for pid: urn:uuid:fc6798d4-9e79-4eb7-84d6-db05005cd356 with format_id: https://ns.dataone.org/service/types/v2.0#SystemMetadata
+2025-12-15 21:29:51 - INFO - HashStoreClient - use_multiprocessing (bool): False
+2025-12-15 21:29:51 - INFO - HashStoreClient - HashStore initialized.
+2025-12-15 21:29:51 - INFO - Retrieved metadata for pid: urn:uuid:fc6798d4-9e79-4eb7-84d6-db05005cd356
