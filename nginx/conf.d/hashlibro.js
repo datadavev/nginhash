@@ -54,22 +54,28 @@ async function computeSysmetaHash(pid) {
 async function getSystemMetadata(pid) {
     const pid_hash = await computePIDHash(pid);
     const meta_hash = await computeSysmetaHash(pid);
-    const meta_path = `${hashstore_root}/metadata/${pid_hash.join("/")}/${meta_hash}`;
-    return await fs.promises.readFile(meta_path, 'utf8');
+    try {
+        const meta_path = `${hashstore_root}/metadata/${pid_hash.join("/")}/${meta_hash}`;
+        return await fs.promises.readFile(meta_path, 'utf8');
+    } catch(error) {
+        return null;
+    }
 }
 
 async function test_sysmeta(r) {
     const pid = r.variables[1];
     const sysmeta_xml = await getSystemMetadata(pid);
-    const doc = xml.parse(sysmeta_xml);
-    const res = [];
-    const ap = doc.$root.accessPolicy;
-    for (const i in ap.$tags$allow) {
-        const allow = ap.$tags$allow[i];
-        const subject = allow.$tag$subject
-        const perms = allow.$tags$permission
-        for (const j in perms) {
-            res.push(`${subject.$text} :: ${perms[j].$text}`);
+    const res = []; 
+    if (sysmeta_xml !== null) {
+        const doc = xml.parse(sysmeta_xml);
+        const ap = doc.$root.accessPolicy;
+        for (const i in ap.$tags$allow) {
+            const allow = ap.$tags$allow[i];
+            const subject = allow.$tag$subject
+            const perms = allow.$tags$permission
+            for (const j in perms) {
+                res.push(`${subject.$text} :: ${perms[j].$text}`);
+            }
         }
     }
     const response = {
@@ -86,6 +92,10 @@ async function test_sysmeta(r) {
  * @returns boolean
  */
 function isPublic(sysmeta_xml) {
+    if (sysmeta_xml === null) {
+        // public by default
+        return true;
+    }
     const doc = xml.parse(sysmeta_xml);
     const policies = doc.$root.accessPolicy;
     for (const i in policies.$tags$allow) {
@@ -111,7 +121,8 @@ function isPublic(sysmeta_xml) {
  * @param {*} permission 
  * @returns 
  */
-async function isAuthorized(r, token, pid) {
+async function isAuthorized(r, pid) {
+    const token = r.headersIn["Authorization"] || "";
     const permission = "read";
     const info = {
         "token": token,
@@ -164,6 +175,9 @@ async function isAuthorized(r, token, pid) {
 async function getMetadata(r) {
     const pid = r.variables[1];
     const meta_data = await getSystemMetadata(pid);
+    if (meta_data === null) {
+        r.return(404, `System metadata not found for ${pid}`);
+    }
     r.headersOut["Content-Disposition"] = `inline; filename="${pid}_meta.xml"`;
     r.headersOut["Content-Type"] = "application/xml";
     r.return(200, meta_data);
@@ -174,27 +188,41 @@ async function getMetadata(r) {
  * @param {*} r request
  */
 async function getInfo(r) {
-    const pid = r.variables[1];
-    const pid_hash = await computePIDHash(pid);
-    const pid_path = `${hashstore_root}/refs/pids/${pid_hash.join("/")}`;
-    const meta_path = `${hashstore_root}/metadata/${pid_hash.join("/")}/${pid_hash[pid_hash.length-1]}`;
-    const pid_data = await fs.promises.readFile(pid_path, 'utf8');
-    const cid_parts = splitHash(pid_data.trim());
-    const cid_path = `${hashstore_root}/refs/cids/${cid_parts.join("/")}`;
-    const cid_data = await fs.promises.readFile(cid_path, 'utf8');
-    const cid_object_path = `/hashstore/objects/${cid_parts.join("/")}`;
-    const token = r.headersIn["Authorization"] || "";
-    let response = {
+    const response = {
         "uri": r.uri,
-        "pid": pid,
-        "pid_path": pid_path,
-        "meta_path": meta_path,
-        "pid_data": pid_data,
-        "cid_path": cid_path,
-        "cid_data": cid_data,
-        "cid_object_path": cid_object_path,
-        "authorized": await isAuthorized(r, token, pid, "read")
+        "pid": r.variables[1],
+        "pid_path": null,
+        "meta_path": null,
+        "pid_data": null,
+        "cid_path": null,
+        "cid_data": null,
+        "cid_object_path": null,
+        "authorized": null,
+        "message": null
     };
+    response.pid_hash = await computePIDHash(response.pid);
+    response.pid_path = `${hashstore_root}/refs/pids/${response.pid_hash.join("/")}`;
+    try {
+        response.pid_data = await fs.promises.readFile(response.pid_path, 'utf8');
+    } catch (error) {
+        response.message = error.message;
+        r.headersOut["Content-Disposition"] = 'inline; filename="info.json"';
+        r.headersOut["Content-Type"] = "application/json";
+        r.return(404, JSON.stringify(response, null, 2));
+    }
+    response.meta_path = `${hashstore_root}/metadata/${response.pid_hash.join("/")}/${response.pid_hash[response.pid_hash.length-1]}`;
+    const cid_parts = splitHash(response.pid_data.trim());
+    response.cid_path = `${hashstore_root}/refs/cids/${cid_parts.join("/")}`;
+    try {
+        response.cid_data = await fs.promises.readFile(response.cid_path, 'utf8');
+    } catch (error) {
+        response.message = error.message;
+        r.headersOut["Content-Disposition"] = 'inline; filename="info.json"';
+        r.headersOut["Content-Type"] = "application/json";
+        r.return(404, JSON.stringify(response, null, 2));
+    }
+    response.cid_object_path = `/hashstore/objects/${cid_parts.join("/")}`;
+    response.authorized = await isAuthorized(r, response.pid);
     r.headersOut["Content-Disposition"] = 'inline; filename="info.json"';
     r.headersOut["Content-Type"] = "application/json";
     r.return(200, JSON.stringify(response, null, 2));
@@ -210,14 +238,21 @@ async function getObject(r) {
     const pid = r.variables[1];
     const pid_hash = await computePIDHash(pid);
     const pid_path = `${hashstore_root}/refs/pids/${pid_hash.join("/")}`;
-    const pid_data = await fs.promises.readFile(pid_path, 'utf8');
-    const cid_parts = splitHash(pid_data.trim());
-    const cid_object_path = `/hashstore/objects/${cid_parts.join("/")}`;
-
-    r.variables.njs_object_path = cid_object_path;
-    // TODO: set content-type based on file type
-    r.headersOut["content-type"] = "text/csv";
-    return r.internalRedirect("@serve_file");
+    try {
+        const pid_data = await fs.promises.readFile(pid_path, 'utf8');
+        const cid_parts = splitHash(pid_data.trim());
+        const cid_object_path = `/hashstore/objects/${cid_parts.join("/")}`;
+        const authorized = await isAuthorized(r, pid);
+        if (!authorized) {
+            r.return(401, `Not authorized for read on ${pid}`);
+        }
+        r.variables.njs_object_path = cid_object_path;
+        // TODO: set content-type based on file type
+        r.headersOut["content-type"] = "text/csv";
+        return r.internalRedirect("@serve_file");
+    } catch (error) {
+        r.return(404, `Not found: ${pid}`);
+    }
 }
 
 export default {getInfo, getMetadata, getObject, test_sysmeta};
