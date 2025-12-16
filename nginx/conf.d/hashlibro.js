@@ -178,6 +178,7 @@ async function isAuthorized(r, pid) {
  */
 async function getMetadata(r) {
     const pid = r.variables[1];
+    console.info(`getMetadata: ${pid}`);
     const meta_data = await getSystemMetadata(pid);
     if (meta_data === null) {
         r.return(404, `System metadata not found for ${pid}`);
@@ -205,6 +206,7 @@ async function getInfo(r) {
         "authorized": null,
         "message": null
     };
+    console.info(`getInfo: ${response.pid}`);
     response.pid_hash = await computePIDHash(response.pid);
     response.pid_path = `${hashstore_root}/refs/pids/${response.pid_hash.join("/")}`;
     try {
@@ -243,6 +245,7 @@ async function getInfo(r) {
  */
 async function getObject(r) {
     const pid = r.variables[1];
+    console.info(`getObject: ${pid}`);
     const pid_hash = await computePIDHash(pid);
     const pid_path = `${hashstore_root}/refs/pids/${pid_hash.join("/")}`;
     try {
