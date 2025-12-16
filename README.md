@@ -109,3 +109,12 @@ curl -r 120-200 "http://localhost:2010/object/urn:uuid:fc6798d4-9e79-4eb7-84d6-d
 C1C,70.50356,-149.64598,-27.3,78%,14.4,17%,324
 C
 ```
+
+## Performance
+
+Performance seems reasonable with this small set of test data. Note that the tests were not exercising calling the DataONE `isAuthorized` API.
+
+<img width="1123" height="1026" alt="image" src="https://github.com/user-attachments/assets/5e7904c7-ee21-4c2d-9bcf-805bb755bd34" />
+
+
+
