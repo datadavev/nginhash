@@ -2,11 +2,6 @@
 
 This is an experiment using the Nginx NJS module to create a readonly mechanism for retrieving objects from a hashstore given their PID.
 
-Three main endpoints are provided:
-- `/info/<pid>`: Retrieve diagnostic info for `pid`.
-- `/meta/<pid>`: Retrieve system metadata for `pid`, including a check for public read permission.
-- `/object/<pid>`: Get the object identified by `pid`.
-
 ```mermaid
 sequenceDiagram
 participant client
@@ -32,6 +27,12 @@ nginx ->> client: bytes of foo
 end
 ```
 Rough sketch of process for reading an object from hashstore.
+
+Three main endpoints are provided:
+- `/info/<pid>`: Retrieve diagnostic info for `pid`.
+- `/meta/<pid>`: Retrieve system metadata for `pid`, including a check for public read permission.
+- `/object/<pid>`: Get the object identified by `pid`.
+
 
 ## Setup
 
